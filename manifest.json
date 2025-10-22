@@ -1,21 +1,30 @@
 {
   "name": "Workflow Tools",
-  "short_name": "Workflow",
+  "short_name": "WorkflowTools",
   "description": "Simplifying the way you work",
-  "start_url": "./index.html",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#F2F2F2",
   "theme_color": "#004D4D",
+  "orientation": "any",
   "icons": [
     {
-      "src": "logo.png",
-      "sizes": "192x192",
-      "type": "image/png"
+      "src": "favicon.png",
+      "sizes": "1547x1434",
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "logo.png",
+      "src": "favicon.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

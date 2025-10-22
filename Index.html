@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=0.95" />
+  <title>Workflow Tools</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --deep-teal: #004D4D;
+      --charcoal: #333333;
+      --soft-silver: #F2F2F2;
+      --burnt-orange: #FF6600;
+      --burnt-orange-hover: #E55A00;
+      --success: #10b981;
+      --error: #ef4444;
+      --warning: #f59e0b;
+      --shadow: rgba(0, 0, 0, 0.1);
+      --border-radius: 11.4px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    html {
+      font-size: 95%;
+    }
+
+    body {
+      background-color: var(--soft-silver);
+      color: var(--charcoal);
+      line-height: 1.6;
+      padding: 28.5px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1235px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 38px;
+      padding-bottom: 19px;
+      border-bottom: 1px solid rgba(0, 77, 77, 0.1);
+      position: relative;
+    }
+
+    .logo {
+      height: 76px;
+      width: auto;
+      margin-right: 23.75px;
+    }
+
+    .header-text {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+
+    .header-text h1 {
+      font-size: 1.9em;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--deep-teal), var(--burnt-orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 2x;
+    }
+
+    .header-text p {
+      font-size: 0.76rem;
+      color: var(--charcoal);
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 23.75px;
+      margin-bottom: 47.5px;
+    }
+
+    .tool-card {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: var(--border-radius);
+      box-shadow: 0 9.5px 28.5px var(--shadow);
+      padding: 23.75px;
+      text-align: center;
+      transition: var(--transition);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(0, 77, 77, 0.1);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-4.75px);
+      box-shadow: 0 14.25px 38px rgba(0, 0, 0, 0.15);
+    }
+
+    .tool-icon {
+      font-size: 2.375rem;
+      color: var(--deep-teal);
+      margin-bottom: 19px;
+      height: 57px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tool-card h3 {
+      font-size: 0.988rem;
+      margin-bottom: 14.25px;
+      color: var(--deep-teal);
+    }
+
+    .tool-card p {
+      color: var(--charcoal);
+      margin-bottom: 23.75px;
+      flex-grow: 1;
+      line-height: 1.6;
+    }
+
+    .tool-button {
+      background: var(--burnt-orange);
+      color: white;
+      border: none;
+      padding: 11.4px 19px;
+      border-radius: 9.5px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9025rem;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7.6px;
+      margin: 0 auto;
+      box-shadow: 0 3.8px 11.4px rgba(255, 102, 0, 0.2);
+    }
+
+    .tool-button:hover {
+      background: var(--burnt-orange-hover);
+      transform: translateY(-1.9px);
+      box-shadow: 0 5.7px 15.2px rgba(255, 102, 0, 0.3);
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 19px;
+      border-top: 1px solid rgba(0, 77, 77, 0.1);
+      color: var(--charcoal);
+      font-size: 0.855rem;
+    }
+
+    .footer-left {
+      display: flex;
+      gap: 28.5px;
+    }
+
+    .version {
+      color: var(--deep-teal);
+      font-weight: 600;
+    }
+
+    .footer-right {
+      color: var(--deep-teal);
+    }
+
+    .heart {
+      color: #ff6b6b;
+    }
+
+    @media (max-width: 1024px) {
+      .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 19px;
+      }
+      
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      header {
+        flex-direction: column;
+        text-align: center;
+        position: relative;
+      }
+      
+      .logo {
+        margin-right: 0;
+        margin-bottom: 14.25px;
+        height: 66.5px;
+      }
+      
+      .header-text {
+        position: static;
+        transform: none;
+        text-align: center;
+      }
+      
+      .header-text h1 {
+        font-size: 1.216rem;
+      }
+      
+      footer {
+        flex-direction: column;
+        gap: 14.25px;
+        text-align: center;
+      }
+      
+      .footer-left {
+        flex-direction: column;
+        gap: 9.5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="logo.png" alt="Workflow Tools Logo" class="logo" />
+      <div class="header-text">
+        <h1>Workflow Tools</h1>
+        <p>Simplifying the way you work</p>
+      </div>
+    </header>
+
+    <main>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-icon">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+          </div>
+          <h3>RepairAssist</h3>
+          <p>Smart assistant for diagnosing and logging laptop repair activities with detailed tracking and reporting.</p>
+          <button class="tool-button" onclick="openTool('RepairAssist.html')">
+            <i class="fas fa-external-link-alt"></i>
+            Open Tool
+          </button>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-icon">
+            <i class="fa-solid fa-envelope-open-text"></i>
+          </div>
+          <h3>QuickPark & Mailer</h3>
+          <p>Generate quick comment templates and mail drafts for efficient ticket closures and communication.</p>
+          <button class="tool-button" onclick="openTool('QuickPark.html')">
+            <i class="fas fa-external-link-alt"></i>
+            Open Tool
+          </button>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-icon">
+            <i class="fa-solid fa-link"></i>
+          </div>
+          <h3>Feedback Link Generator</h3>
+          <p>Create and share unique ticket feedback links instantly with customizable options and tracking.</p>
+          <button class="tool-button" onclick="openTool('Feedback.html')">
+            <i class="fas fa-external-link-alt"></i>
+            Open Tool
+          </button>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-icon">
+            <i class="fa-solid fa-list-check"></i>
+          </div>
+          <h3>Simple To Do</h3>
+          <p>Modern task tracker to plan, monitor, and analyze your daily tasks with progress tracking.</p>
+          <button class="tool-button" onclick="openTool('To Do.html')">
+            <i class="fas fa-external-link-alt"></i>
+            Open Tool
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-left">
+        <div class="version">Version 2.0</div>
+      </div>
+      <div class="footer-right">Built with <span class="heart">❤️</span> for Efficiency</div>
+    </footer>
+  </div>
+
+  <script>
+    function openTool(file) {
+      window.open(file, '_blank');
+    }
+  </script>
+</body>
+</html>

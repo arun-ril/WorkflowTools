@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickPark & Mailer</title>
+  <link rel="icon" href="favicon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --deep-teal: #004D4D;
+      --charcoal: #333333;
+      --soft-silver: #F2F2F2;
+      --burnt-orange: #FF6600;
+      --burnt-orange-hover: #E55A00;
+      --success: #10b981;
+      --error: #ef4444;
+      --warning: #f59e0b;
+      --shadow: rgba(0, 0, 0, 0.1);
+      --border-radius: 12px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      --deep-teal: #006666;
+      --charcoal: #e0e0e0;
+      --soft-silver: #1a1a1a;
+      --shadow: rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background: 
+        url('https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80%27') center/cover no-repeat fixed,
+        linear-gradient(to bottom, rgba(0, 77, 77, 0.9), rgba(0, 60, 60, 0.95));
+      color: var(--charcoal);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    [data-theme="dark"] body {
+      background: 
+        url('https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80%27') center/cover no-repeat fixed,
+        linear-gradient(to bottom, rgba(0, 60, 60, 0.9), rgba(0, 40, 40, 0.95));
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 2rem;
+      border: 1px solid rgba(0, 77, 77, 0.1);
+      transform: translateY(20px);
+      opacity: 0;
+      animation: fadeInUp 0.6s ease forwards;
+      backdrop-filter: blur(8px);
+    }
+
+    [data-theme="dark"] .container {
+      background: rgba(42, 42, 42, 0.85);
+      border-color: rgba(0, 102, 102, 0.3);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .home-btn {
+      background: #FF6600;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 12px rgba(255, 102, 0, 0.2);
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+    }
+
+    .home-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      background: #E55A00;
+    }
+
+    .header-icon {
+      background: var(--deep-teal);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 12px rgba(0, 77, 77, 0.2);
+    }
+
+    h2 {
+      font-weight: 700;
+      font-size: 2rem;
+      background: linear-gradient(to right, var(--deep-teal), var(--burnt-orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .theme-toggle {
+      background: var(--deep-teal);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.6rem;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+      transform: translateY(0);
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      background: #003737;
+    }
+
+    .top-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 1.5rem 2rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      transform: translateY(10px);
+      opacity: 0;
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .field:nth-child(1) { animation-delay: 0.1s; }
+    .field:nth-child(2) { animation-delay: 0.15s; }
+    .field:nth-child(3) { animation-delay: 0.2s; }
+    .field:nth-child(4) { animation-delay: 0.25s; }
+    .field:nth-child(5) { animation-delay: 0.3s; }
+    .field:nth-child(6) { animation-delay: 0.35s; }
+    .field:nth-child(7) { animation-delay: 0.4s; }
+    .field:nth-child(8) { animation-delay: 0.45s; }
+    .field:nth-child(9) { animation-delay: 0.5s; }
+    .field:nth-child(10) { animation-delay: 0.55s; }
+    .field:nth-child(11) { animation-delay: 0.6s; }
+    .field:nth-child(12) { animation-delay: 0.65s; }
+    .field:nth-child(13) { animation-delay: 0.7s; }
+    .field:nth-child(14) { animation-delay: 0.75s; }
+    .field:nth-child(15) { animation-delay: 0.8s; }
+    .field:nth-child(16) { animation-delay: 0.85s; }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--deep-teal);
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+
+    [data-theme="dark"] label {
+      color: #80d0d0;
+    }
+
+    textarea, input {
+      padding: 0.8rem 1rem;
+      border-radius: var(--border-radius);
+      border: 1px solid rgba(0, 77, 77, 0.2);
+      background: var(--soft-silver);
+      color: var(--charcoal);
+      resize: none;
+      font-family: inherit;
+      transition: var(--transition);
+    }
+
+    [data-theme="dark"] textarea, [data-theme="dark"] input {
+      background: #3a3a3a;
+      border-color: #555;
+      color: #e0e0e0;
+    }
+
+    textarea:focus, input:focus {
+      outline: none;
+      border-color: var(--deep-teal);
+      box-shadow: 0 0 0 3px rgba(0, 77, 77, 0.1);
+      background: white;
+      transform: translateY(-2px);
+    }
+
+    [data-theme="dark"] textarea:focus, [data-theme="dark"] input:focus {
+      background: #4a4a4a;
+      box-shadow: 0 0 0 3px rgba(0, 102, 102, 0.3);
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    button {
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      border: none;
+      padding: 0.8rem 1.6rem;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+      transform: translateY(0);
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .load-btn { 
+      background: var(--burnt-orange); 
+      color: white;
+    }
+    
+    .load-btn:hover { 
+      background: var(--burnt-orange-hover);
+    }
+    
+    .clear-btn { 
+      background: var(--error); 
+      color: white;
+    }
+    
+    .copy-btn { 
+      background: var(--success); 
+      color: white;
+    }
+    
+    .mail-btn { 
+      background: var(--warning); 
+      color: white;
+    }
+
+    .output-section {
+      margin-top: 2.5rem;
+      border-top: 1px solid rgba(0, 77, 77, 0.1);
+      padding-top: 2rem;
+      transform: translateY(20px);
+      opacity: 0;
+      animation: fadeInUp 0.6s ease 0.9s forwards;
+    }
+
+    [data-theme="dark"] .output-section {
+      border-top-color: rgba(0, 102, 102, 0.3);
+    }
+
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+    }
+
+    h3 {
+      color: var(--deep-teal);
+      font-size: 1.5rem;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    [data-theme="dark"] h3 {
+      color: #80d0d0;
+    }
+
+    .output-box {
+      background: var(--soft-silver);
+      border: 1px solid rgba(0, 77, 77, 0.2);
+      padding: 1.2rem;
+      border-radius: var(--border-radius);
+      white-space: pre-line;
+      min-height: 150px;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 1.5rem;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+      line-height: 1.6;
+      transition: var(--transition);
+    }
+
+    [data-theme="dark"] .output-box {
+      background: #3a3a3a;
+      border-color: #555;
+      color: #e0e0e0;
+    }
+
+    .mail-controls {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .mail-control {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mail-control .input-group {
+      display: flex;
+      align-items: center;
+    }
+
+    .mail-control input {
+      flex: 1;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .copy-btn-small {
+      background: var(--success);
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      padding: 0.8rem 1rem;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .toast {
+      position: fixed;
+      right: 2rem;
+      bottom: 2rem;
+      background: var(--charcoal);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: var(--border-radius);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast.success {
+      background: var(--success);
+    }
+
+    .toast.error {
+      background: var(--error);
+    }
+
+    .toast.warning {
+      background: var(--warning);
+    }
+
+    .toast.info {
+      background: var(--deep-teal);
+    }
+
+    .toast-icon {
+      font-size: 1.2rem;
+    }
+
+    .phone-input-group {
+      display: flex;
+      align-items: center;
+      border: 1px solid rgba(0, 77, 77, 0.2);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .phone-input-group:focus-within {
+      border-color: var(--deep-teal);
+      box-shadow: 0 0 0 3px rgba(0, 77, 77, 0.1);
+      transform: translateY(-2px);
+    }
+
+    [data-theme="dark"] .phone-input-group {
+      border-color: #555;
+    }
+
+    .phone-prefix {
+      padding: 0.8rem 1rem;
+      background: var(--deep-teal);
+      color: white;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .phone-input {
+      flex: 1;
+      border: none;
+      border-radius: 0;
+      background: var(--soft-silver);
+      transition: var(--transition);
+    }
+
+    [data-theme="dark"] .phone-input {
+      background: #3a3a3a;
+      color: #e0e0e0;
+    }
+
+    /* Footer styles from main page */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(0, 77, 77, 0.1);
+      color: var(--charcoal);
+      font-size: 0.9rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    [data-theme="dark"] .footer {
+      border-top-color: rgba(0, 102, 102, 0.3);
+      color: #e0e0e0;
+    }
+
+    .footer-left {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .version {
+      color: var(--deep-teal);
+      font-weight: 600;
+    }
+
+    [data-theme="dark"] .version {
+      color: #80d0d0;
+    }
+
+    .footer-right {
+      color: var(--deep-teal);
+    }
+
+    [data-theme="dark"] .footer-right {
+      color: #80d0d0;
+    }
+
+    .heart {
+      color: #ff6b6b;
+    }
+
+    @media (max-width: 1024px) {
+      .grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .header-left {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .top-buttons, .buttons {
+        flex-direction: column;
+      }
+      
+      button {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .mail-controls {
+        flex-direction: column;
+      }
+      
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+      }
+      
+      .footer-left {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--soft-silver);
+      border-radius: 4px;
+    }
+
+    [data-theme="dark"] ::-webkit-scrollbar-track {
+      background: #3a3a3a;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--deep-teal);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #003737;
+    }
+
+    /* Animation keyframes */
+    @keyframes pulse {
+      0% { transform: translateY(10px) scale(1); }
+      50% { transform: translateY(10px) scale(1.02); }
+      100% { transform: translateY(10px) scale(1); }
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateY(10px) translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateY(10px) translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateY(10px) translateX(5px); }
+    }
+
+    /* Fix for animation issues */
+    .field.animated {
+      animation: none !important;
+      transform: translateY(10px);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-left">
+        <button class="home-btn" id="homeBtn">
+          <i class="fas fa-home"></i>
+        </button>
+        <div class="header-content">
+          <div class="header-icon">
+            <i class="fa-solid fa-envelope-open-text"></i>
+          </div>
+          <div>
+            <h2>QuickPark & Mailer</h2>
+          </div>
+        </div>
+      </div>
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i> Toggle Theme
+      </button>
+    </div>
+
+    <!-- Top buttons: Load Samples, Clear All -->
+    <div class="top-buttons">
+      <button class="load-btn" id="loadBtn">
+        <i class="fas fa-file-import"></i> Load Samples
+      </button>
+      <button class="clear-btn" id="clearBtn">
+        <i class="fas fa-broom"></i> Clear All
+      </button>
+    </div>
+
+    <div class="grid">
+      <div class="field">
+        <label for="issue">Exact Issue</label>
+        <textarea id="issue" rows="2" placeholder="Describe the issue..."></textarea>
+      </div>
+      <div class="field">
+        <label for="steps">Diagnostic Steps Performed</label>
+        <textarea id="steps" rows="2" placeholder="List troubleshooting steps..."></textarea>
+      </div>
+
+      <div class="field">
+        <label for="detected">Issue Detected</label>
+        <input type="text" id="detected" placeholder="Issue detected...">
+      </div>
+      <div class="field">
+        <label for="office">User Office Location</label>
+        <textarea id="office" rows="2" placeholder="Office location..."></textarea>
+      </div>
+
+      <div class="field">
+        <label for="current">User Current Location</label>
+        <textarea id="current" rows="2" placeholder="Current location..."></textarea>
+      </div>
+      <div class="field">
+        <label for="contact">User Contact Details</label>
+        <div class="phone-input-group">
+          <span class="phone-prefix">+91</span>
+          <input type="text" id="contact" class="phone-input" placeholder="Enter number">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="make">Make</label>
+        <input type="text" id="make" placeholder="Device make...">
+      </div>
+      <div class="field">
+        <label for="model">Model</label>
+        <input type="text" id="model" placeholder="Device model...">
+      </div>
+
+      <div class="field">
+        <label for="serial">Serial Number</label>
+        <input type="text" id="serial" placeholder="Serial number...">
+      </div>
+      <div class="field">
+        <label for="hostname">Hostname</label>
+        <input type="text" id="hostname" placeholder="Hostname...">
+      </div>
+
+      <div class="field">
+        <label for="vendorid">Vendor Call ID (Warranty)</label>
+        <input type="text" id="vendorid" placeholder="Vendor call ID...">
+      </div>
+      <div class="field">
+        <label for="ticketid">Get IT Ticket ID</label>
+        <input type="text" id="ticketid" placeholder="Ticket ID...">
+      </div>
+
+      <div class="field">
+        <label for="parts">Parts Ordered</label>
+        <input type="text" id="parts" placeholder="Parts ordered...">
+      </div>
+      <div class="field">
+        <label for="verbal">Verbal Communication to User</label>
+        <input type="text" id="verbal" placeholder="Verbal communication...">
+      </div>
+
+      <div class="field">
+        <label for="alt_suggested">Alternative Option Suggested</label>
+        <input type="text" id="alt_suggested" placeholder="Alternative suggested...">
+      </div>
+      <div class="field">
+        <label for="alt_available">Alternative Options Available</label>
+        <input type="text" id="alt_available" placeholder="Alternative available...">
+      </div>
+    </div>
+
+    <!-- Bottom buttons: Copy Parking, Copy Mail, Open Mail -->
+    <div class="buttons">
+      <button class="copy-btn" id="copyParkingBtn">
+        <i class="far fa-copy"></i> Copy Parking
+      </button>
+      <button class="copy-btn" id="copyMailBtn">
+        <i class="far fa-copy"></i> Copy Mail
+      </button>
+      <button class="mail-btn" id="openMailBtn">
+        <i class="fas fa-paper-plane"></i> Open Mail
+      </button>
+    </div>
+
+    <div class="output-section">
+      <div class="output-header">
+        <h3>Parking Comments</h3>
+      </div>
+      <div class="output-box" id="parkingOutput"></div>
+
+      <h3>Mail Content</h3>
+      
+      <div class="mail-controls">
+        <div class="mail-control">
+          <label for="cc">CC</label>
+          <div class="input-group">
+            <input type="text" id="cc" readonly value="CMTVendor@ril.com; Pankaj.Mahindrakar@ril.com; Javed4.Khan@ril.com; Mayur3.Jadhav@ril.com; WPF.StateOfficeTLs@ril.com">
+            <button class="copy-btn-small" onclick="copyToClipboard('cc')">
+              <i class="far fa-copy"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="mail-control">
+          <label for="subject">Subject</label>
+          <div class="input-group">
+            <input type="text" id="subject" readonly>
+            <button class="copy-btn-small" onclick="copyToClipboard('subject')">
+              <i class="far fa-copy"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="output-box" id="mailOutput"></div>
+    </div>
+
+    <!-- Updated footer from main page -->
+    <footer class="footer">
+      <div class="footer-left">
+        <div class="version">© Reliance Industries Limited</div>
+      </div>
+      <div class="footer-right">Built with <span class="heart">❤️</span> for Efficiency</div>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-hidden="true">
+    <i class="fas fa-check-circle toast-icon"></i>
+    <span class="toast-message">Copied to clipboard</span>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize CC field
+      document.getElementById("cc").value = "CMTVendor@ril.com; Pankaj.Mahindrakar@ril.com; Javed4.Khan@ril.com; Mayur3.Jadhav@ril.com; WPF.StateOfficeTLs@ril.com";
+      
+      // Set up event listeners for all input fields
+      document.querySelectorAll("input, textarea").forEach(el => {
+        if (el.id !== 'cc') {
+          el.addEventListener("input", generateOutputs);
+        }
+      });
+      
+      // Set up button event listeners
+      document.getElementById("loadBtn").addEventListener("click", loadSample);
+      document.getElementById("clearBtn").addEventListener("click", clearForm);
+      document.getElementById("copyParkingBtn").addEventListener("click", copyParking);
+      document.getElementById("copyMailBtn").addEventListener("click", copyMail);
+      document.getElementById("openMailBtn").addEventListener("click", openMailClient);
+      document.getElementById("themeToggle").addEventListener("click", toggleTheme);
+      document.getElementById("homeBtn").addEventListener("click", goHome);
+      
+      // Load saved theme
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.body.dataset.theme = 'dark';
+        document.getElementById("themeToggle").innerHTML = '<i class="fas fa-sun"></i> Toggle Theme';
+      }
+    });
+
+    function goHome() {
+      window.location.href = "index.html";
+    }
+
+    function loadSample() {
+      // Reset animation state
+      const fields = document.querySelectorAll('.field');
+      fields.forEach(field => {
+        field.classList.add('animated');
+      });
+      
+      // Set sample values
+      document.getElementById("issue").value = "Laptop not turning on";
+      document.getElementById("steps").value = "Power reset was performed, but the issue still persists";
+      document.getElementById("detected").value = "Motherboard";
+      document.getElementById("office").value = "DAKC Building 24,Koparkhairane ,Thane-Belapur Road, Navi Mumbai, Maharashtra - 400709";
+      document.getElementById("current").value = "DAKC Building 24,Koparkhairane ,Thane-Belapur Road, Navi Mumbai, Maharashtra - 400709";
+      document.getElementById("contact").value = "8850944877";
+      document.getElementById("make").value = "HP";
+      document.getElementById("model").value = "445R G6";
+      document.getElementById("serial").value = "5CD0092M9L";
+      document.getElementById("hostname").value = "LT0129367";
+      document.getElementById("vendorid").value = "5146957803";
+      document.getElementById("ticketid").value = "SD31257900";
+      document.getElementById("parts").value = "Motherboard";
+      document.getElementById("verbal").value = "Yes";
+      document.getElementById("alt_suggested").value = "Yes";
+      document.getElementById("alt_available").value = "User will check with business IT for temporary laptop";
+      
+      // Generate outputs
+      generateOutputs();
+      
+      // Show success message
+      showToast("Sample data loaded!", "success");
+    }
+
+    function clearForm() {
+      // Reset animation state
+      const fields = document.querySelectorAll('.field');
+      fields.forEach(field => {
+        field.classList.add('animated');
+      });
+      
+      // Clear all form fields
+      document.querySelectorAll("input, textarea").forEach(el => {
+        if (el.id !== 'cc') {
+          el.value = "";
+        }
+      });
+      
+      // Clear outputs
+      document.getElementById("parkingOutput").innerText = "";
+      document.getElementById("mailOutput").innerText = "";
+      document.getElementById("subject").value = "";
+      
+      // Show info message
+      showToast("Form cleared!", "info");
+    }
+
+    function generateOutputs() {
+      let issue = document.getElementById("issue").value;
+      let steps = document.getElementById("steps").value;
+      let detected = document.getElementById("detected").value;
+      let office = document.getElementById("office").value;
+      let current = document.getElementById("current").value;
+      let contact = "+91 " + document.getElementById("contact").value;
+      let make = document.getElementById("make").value;
+      let model = document.getElementById("model").value;
+      let serial = document.getElementById("serial").value;
+      let hostname = document.getElementById("hostname").value;
+      let vendorid = document.getElementById("vendorid").value;
+      let ticketid = document.getElementById("ticketid").value;
+      let parts = document.getElementById("parts").value;
+      let verbal = document.getElementById("verbal").value;
+      let alt_suggested = document.getElementById("alt_suggested").value;
+      let alt_available = document.getElementById("alt_available").value;
+
+      let parkingText = 
+`Exact Issue: ${issue}
+
+Diagnostic Steps performed : ${steps}
+
+Issue detected : ${detected}
+
+User Office Location :
+
+${office}
+
+User Current Location :
+
+${current}
+
+User contact Details: ${contact}
+
+Make: ${make}
+
+Model: ${model}
+
+Serial Number: ${serial}
+
+Hostname: ${hostname}
+
+Vendor Call ID In Case Of Warranty: ${vendorid}
+
+Get IT Ticket ID: ${ticketid}
+
+Verbal communication to User: ${verbal}
+
+Alternative option suggested to User: ${alt_suggested}
+
+Alternative options available with User: ${alt_available}`;
+
+      document.getElementById("parkingOutput").innerText = parkingText;
+
+      let subject = `Vendor case details for ${ticketid} | Vendor Case ID : ${vendorid} | Parts Ordered: ${parts}`;
+      document.getElementById("subject").value = subject;
+
+      let mailText = 
+`Kindly find the Vendor case details for ${ticketid} below,
+
+Exact Issue: ${issue}
+
+Diagnostic Steps performed : ${steps}
+
+Issue detected : ${detected}
+
+Parts Ordered: ${parts}
+
+Vendor Call ID In Case Of Warranty: ${vendorid}
+
+User Office Location :
+
+${office}
+
+User Current Location :
+
+${current}
+
+User contact Details: ${contact}
+
+Make: ${make}
+
+Model: ${model}
+
+Serial Number: ${serial}
+
+Hostname: ${hostname}
+
+Verbal communication to User: ${verbal}
+
+Alternative option suggested to User: ${alt_suggested}
+
+Alternative options available with User: ${alt_available}`;
+
+      document.getElementById("mailOutput").innerText = mailText;
+    }
+
+    function copyToClipboard(elementId) {
+      const element = document.getElementById(elementId);
+      navigator.clipboard.writeText(element.value);
+      
+      const btn = document.querySelector(`#${elementId} + .copy-btn-small i`);
+      btn.className = 'fas fa-check';
+      setTimeout(() => {
+        btn.className = 'far fa-copy';
+      }, 1000);
+      
+      showToast(`${elementId === 'cc' ? 'CC' : 'Subject'} copied to clipboard!`, "success");
+    }
+
+    function copyParking() {
+      navigator.clipboard.writeText(document.getElementById("parkingOutput").innerText);
+      
+      const btn = document.getElementById('copyParkingBtn');
+      btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+      setTimeout(() => {
+        btn.innerHTML = '<i class="far fa-copy"></i> Copy Parking';
+      }, 1000);
+      
+      showToast("Parking text copied to clipboard!", "success");
+    }
+
+    function copyMail() {
+      navigator.clipboard.writeText(document.getElementById("mailOutput").innerText);
+      
+      const btn = document.getElementById('copyMailBtn');
+      btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+      setTimeout(() => {
+        btn.innerHTML = '<i class="far fa-copy"></i> Copy Mail';
+      }, 1000);
+      
+      showToast("Mail body copied to clipboard!", "success");
+    }
+
+    function openMailClient() {
+      let cc = document.getElementById("cc").value;
+      let subject = document.getElementById("subject").value;
+      let body = document.getElementById("mailOutput").innerText;
+      
+      const btn = document.getElementById('openMailBtn');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening...';
+      
+      setTimeout(() => {
+        window.location.href = `mailto:?cc=${encodeURIComponent(cc)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Open Mail';
+      }, 500);
+    }
+
+    function toggleTheme() {
+      const isDark = document.body.dataset.theme === 'dark';
+      document.body.dataset.theme = isDark ? 'light' : 'dark';
+      const themeToggle = document.getElementById('themeToggle');
+      themeToggle.innerHTML = `<i class="fas ${isDark ? 'fa-moon' : 'fa-sun'}"></i> Toggle Theme`;
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
+      showToast(`Switched to ${isDark ? 'Light' : 'Dark'} Mode!`, "info");
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const icon = toast.querySelector('.toast-icon');
+      const messageEl = toast.querySelector('.toast-message');
+      
+      // Set icon based on type
+      if (type === 'success') {
+        icon.className = 'fas fa-check-circle toast-icon';
+      } else if (type === 'error') {
+        icon.className = 'fas fa-exclamation-circle toast-icon';
+      } else if (type === 'warning') {
+        icon.className = 'fas fa-exclamation-triangle toast-icon';
+      } else if (type === 'info') {
+        icon.className = 'fas fa-info-circle toast-icon';
+      }
+      
+      // Set message
+      messageEl.textContent = message;
+      
+      // Set toast class
+      toast.className = 'toast';
+      toast.classList.add(type, 'show');
+      toast.setAttribute('aria-hidden', 'false');
+      
+      // Hide after delay
+      setTimeout(() => {
+        toast.classList.remove('show');
+        toast.setAttribute('aria-hidden', 'true');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

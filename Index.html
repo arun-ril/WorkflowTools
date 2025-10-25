@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workflow Tools</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --deep-teal: #004D4D;
+      --charcoal: #333333;
+      --soft-silver: #F2F2F2;
+      --burnt-orange: #FF6600;
+      --burnt-orange-hover: #E55A00;
+      --success: #10b981;
+      --error: #ef4444;
+      --warning: #f59e0b;
+      --shadow: rgba(0, 0, 0, 0.1);
+      --border-radius: 12px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      --deep-teal: #006666;
+      --charcoal: #e0e0e0;
+      --soft-silver: #1a1a1a;
+      --shadow: rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: 
+        url('https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80%27') center/cover no-repeat fixed,
+        linear-gradient(to bottom, rgba(0, 77, 77, 0.9), rgba(0, 60, 60, 0.95));
+      color: var(--charcoal);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      transition: var(--transition);
+      padding: 1rem;
+    }
+
+    [data-theme="dark"] body {
+      background: 
+        url('https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80%27') center/cover no-repeat fixed,
+        linear-gradient(to bottom, rgba(0, 60, 60, 0.9), rgba(0, 40, 40, 0.95));
+    }
+
+    .container {
+      width: 97%;
+      max-width: 1358px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 1.3rem;
+      border: 1px solid rgba(0, 77, 77, 0.1);
+      transform: translateY(20px);
+      opacity: 0;
+      animation: fadeInUp 0.6s ease forwards;
+      backdrop-filter: blur(8px);
+      border-radius: var(--border-radius);
+      min-height: auto;
+    }
+
+    [data-theme="dark"] .container {
+      background: rgba(42, 42, 42, 0.85);
+      border-color: rgba(0, 102, 102, 0.3);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.3rem;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-icon {
+      background: var(--deep-teal);
+      color: white;
+      width: 63.25px;
+      height: 63.25px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 27.83px;
+      box-shadow: 0 4px 12px rgba(0, 77, 77, 0.2);
+    }
+
+    .header-icon img {
+      filter: brightness(0) invert(1);
+      width: 35.42px;
+      height: 35.42px;
+    }
+
+    h2 {
+      font-weight: 700;
+      font-size: 1.65rem; /* Reduced by 15% from 1.94rem */
+      background: linear-gradient(to right, var(--deep-teal), var(--burnt-orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-content p {
+      font-size: 0.85rem; /* Reduced by 15% from 1rem */
+      color: var(--charcoal);
+    }
+
+    [data-theme="dark"] .header-content p {
+      color: #e0e0e0;
+    }
+
+    .theme-toggle {
+      background: var(--deep-teal);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.6rem;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+      transform: translateY(0);
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      background: #003737;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 1.3rem;
+    }
+
+    .tool-card {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: var(--border-radius);
+      box-shadow: 0 9.5px 28.5px var(--shadow);
+      padding: 1.5rem;
+      text-align: center;
+      transition: var(--transition);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(0, 77, 77, 0.1);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    [data-theme="dark"] .tool-card {
+      background: rgba(42, 42, 42, 0.85);
+      border-color: rgba(0, 102, 102, 0.3);
+    }
+
+    .tool-card:hover {
+      transform: translateY(-4.75px);
+      box-shadow: 0 14.25px 38px rgba(0, 0, 0, 0.15);
+    }
+
+    .tool-icon {
+      font-size: 3.004375rem;
+      color: var(--deep-teal);
+      margin-bottom: 1rem;
+      height: 72.105px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    [data-theme="dark"] .tool-icon {
+      color: #80d0d0;
+    }
+
+    .tool-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: var(--deep-teal);
+    }
+
+    [data-theme="dark"] .tool-card h3 {
+      color: #80d0d0;
+    }
+
+    .tool-card p {
+      color: var(--charcoal);
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+      line-height: 1.6;
+    }
+
+    .tool-button {
+      background: var(--burnt-orange);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 0 auto;
+      box-shadow: 0 3.8px 11.4px rgba(255, 102, 0, 0.2);
+    }
+
+    .tool-button:hover {
+      background: var(--burnt-orange-hover);
+      transform: translateY(-1.9px);
+      box-shadow: 0 5.7px 15.2px rgba(255, 102, 0, 0.3);
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(0, 77, 77, 0.1);
+      color: var(--charcoal);
+      font-size: 0.9rem;
+      flex-wrap: wrap;
+    }
+
+    [data-theme="dark"] .footer {
+      border-top-color: rgba(0, 102, 102, 0.3);
+      color: #e0e0e0;
+    }
+
+    .footer-left {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .version {
+      color: var(--deep-teal);
+      font-weight: 600;
+    }
+
+    [data-theme="dark"] .version {
+      color: #80d0d0;
+    }
+
+    .footer-right {
+      color: var(--deep-teal);
+    }
+
+    [data-theme="dark"] .footer-right {
+      color: #80d0d0;
+    }
+
+    .heart {
+      color: #ff6b6b;
+    }
+
+    .toast {
+      position: fixed;
+      right: 2rem;
+      bottom: 2rem;
+      background: var(--charcoal);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: var(--border-radius);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast.success {
+      background: var(--success);
+    }
+
+    .toast.error {
+      background: var(--error);
+    }
+
+    .toast.warning {
+      background: var(--warning);
+    }
+
+    .toast.info {
+      background: var(--deep-teal);
+    }
+
+    .toast-icon {
+      font-size: 1.2rem;
+    }
+
+    /* Floating Feedback Button Styles */
+    .floating-feedback {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      background: var(--burnt-orange);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(255, 102, 0, 0.4);
+      cursor: pointer;
+      z-index: 1001;
+      transition: var(--transition);
+      border: none;
+      font-size: 1.5rem;
+    }
+
+    .floating-feedback:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 10px 25px rgba(255, 102, 0, 0.5);
+      background: var(--burnt-orange-hover);
+    }
+
+    [data-theme="dark"] .floating-feedback {
+      box-shadow: 0 6px 20px rgba(255, 102, 0, 0.6);
+    }
+
+    @media (max-width: 1200px) {
+      .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .container {
+        padding: 1rem;
+      }
+      
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+      }
+      
+      .footer-left {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .floating-feedback {
+        width: 50px;
+        height: 50px;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        font-size: 1.3rem;
+        z-index: 1001;
+      }
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--soft-silver);
+      border-radius: 4px;
+    }
+
+    [data-theme="dark"] ::-webkit-scrollbar-track {
+      background: #3a3a3a;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--deep-teal);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #003737;
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <div class="container">
+    <div class="header">
+      <div class="header-content">
+        <div class="header-icon">
+          <img src="favicon.png" alt="Workflow Tools Icon">
+        </div>
+        <div>
+          <h2>Workflow Tools</h2>
+          <p>Simplifying the way you work</p>
+        </div>
+      </div>
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i> Toggle Theme
+      </button>
+    </div>
+
+    <main>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-icon">
+            <i class="fa-solid fa-microchip"></i>
+          </div>
+          <h3>Hardware Details</h3>
+          <p>Quickly view hardware and driver details offline, no admin rights needed.</p>
+          <button class="tool-button" onclick="openTool('HardwareDetails.html')">
+            <i class="fas fa-external-link-alt"></i>
+            Open Tool
+          </button>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-icon">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+          </div>
+          <h3>RepairAssist</h3>
+          <p>Smart assistant for diagnosing hardware issues, complete with a detailed troubleshooting guide.</p>
+          <button class="tool-button" onclick="openTool('RepairAssist.html')">
+            <i class="fas fa-external-link-alt"></i>
+            Open Tool
+          </button>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-icon">
+            <i class="fa-solid fa-envelope-open-text"></i>
+          </div>
+          <h3>QuickPark & Mailer</h3>
+          <p>Generate quick comments for parking a ticket and draft emails to share ticket details.</p>
+          <button class="tool-button" onclick="openTool('QuickPark.html')">
+            <i class="fas fa-external-link-alt"></i>
+            Open Tool
+          </button>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-icon">
+            <i class="fa-solid fa-link"></i>
+          </div>
+          <h3>Feedback Link Generator</h3>
+          <p>Instantly create and share ticket feedback links with users to collect feedback.</p>
+          <button class="tool-button" onclick="openTool('Feedback.html')">
+            <i class="fas fa-external-link-alt"></i>
+            Open Tool
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-left">
+        <div class="version">© Reliance Industries Limited</div>
+      </div>
+      <div class="footer-right">Built with <span class="heart">❤️</span> for Efficiency</div>
+    </footer>
+  </div>
+
+  <!-- Floating Feedback Button -->
+  <button class="floating-feedback" id="feedbackButton" aria-label="Send Feedback">
+    <i class="fas fa-comment-alt"></i>
+  </button>
+
+  <div id="toast" class="toast" role="status" aria-hidden="true">
+    <i class="fas fa-check-circle toast-icon"></i>
+    <span class="toast-message">Tool opened successfully!</span>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load saved theme
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.body.dataset.theme = 'dark';
+        document.getElementById("themeToggle").innerHTML = '<i class="fas fa-sun"></i> Toggle Theme';
+      }
+      
+      // Set up theme toggle
+      document.getElementById("themeToggle").addEventListener("click", toggleTheme);
+      
+      // Set up feedback button
+      document.getElementById("feedbackButton").addEventListener("click", sendFeedback);
+    });
+
+    function toggleTheme() {
+      const isDark = document.body.dataset.theme === 'dark';
+      document.body.dataset.theme = isDark ? 'light' : 'dark';
+      const themeToggle = document.getElementById('themeToggle');
+      themeToggle.innerHTML = `<i class="fas ${isDark ? 'fa-moon' : 'fa-sun'}"></i> Toggle Theme`;
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
+      showToast(`Switched to ${isDark ? 'Light' : 'Dark'} Mode!`, "info");
+    }
+
+    function openTool(file) {
+      window.location.href = file;
+      showToast("Tool opened successfully!", "success");
+    }
+
+    function sendFeedback() {
+      const to = "Arun134.Kumar";
+      const cc = "Javed4.Khan@ril.com";
+      const subject = "Feedback on Workflow Tools";
+      const body = "Hello,%0D%0A%0D%0AI would like to provide feedback on the Workflow Tools application.%0D%0A%0D%0A[Please share your feedback here]%0D%0A%0D%0AThank you!";
+      
+      const mailtoLink = `mailto:${to}?cc=${cc}&subject=${encodeURIComponent(subject)}&body=${body}`;
+      
+      window.location.href = mailtoLink;
+      showToast("Opening email client for feedback...", "info");
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const icon = toast.querySelector('.toast-icon');
+      const messageEl = toast.querySelector('.toast-message');
+      
+      // Set icon based on type
+      if (type === 'success') {
+        icon.className = 'fas fa-check-circle toast-icon';
+      } else if (type === 'error') {
+        icon.className = 'fas fa-exclamation-circle toast-icon';
+      } else if (type === 'warning') {
+        icon.className = 'fas fa-exclamation-triangle toast-icon';
+      } else if (type === 'info') {
+        icon.className = 'fas fa-info-circle toast-icon';
+      }
+      
+      // Set message
+      messageEl.textContent = message;
+      
+      // Set toast class
+      toast.className = 'toast';
+      toast.classList.add(type, 'show');
+      toast.setAttribute('aria-hidden', 'false');
+      
+      // Hide after delay
+      setTimeout(() => {
+        toast.classList.remove('show');
+        toast.setAttribute('aria-hidden', 'true');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
